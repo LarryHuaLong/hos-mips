@@ -247,3 +247,13 @@ int sys_umount(const char *target)
 {
 	return syscall(SYS_umount, target);
 }
+
+int sys_gpio_rw(unsigned int rw, unsigned int reg_index, unsigned int value)
+{
+	return syscall(SYS_gpio_rw, rw, reg_index, value);
+}
+
+int sys_read_bt(void)
+{
+	return syscall(SYS_read_bt);
+}

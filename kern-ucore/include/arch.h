@@ -85,6 +85,42 @@ static inline void outw(uint32_t port, uint32_t data)
 
 #define TIMER0_IRQ       0
 
+/* BLUETOOTH BEGIN */
+#define BT_UART_BASE 0XB0800000
+#define UART_rbr 0*4  // In:receive buffer
+#define UART_ier 1*4  // Out: Interrupt Enable Register
+#define UART_fcr 2*4  // Out: FIFO Control Register
+#define UART_lcr 3*4 // Out: Line Control Register
+#define UART_mcr 4*4 // Out: Modem Control Register
+#define UART_lsr 5*4 // In: Line Status Register
+#define UART_msr 6*4 // Modem Status Register
+#define UART_scr 7*4 
+
+#define UART_thr UART_rbr // Out:Transmitter Holding Register
+#define UART_iir UART_fcr // In: Interrupt ID Register
+#define UART_dll UART_rbr // Out: Divisor Latch (Least Significant Byte) Register
+#define UART_dlm UART_ier 
+
+#define BT_IRQ   0
+/* BLUETOOTH END */
+
+/* GPIO BEGIN */
+#define GPIO_CORE_BASE		0xb0600000
+#define GPIO_CORE_OFFSET	0x00001000
+#define GPIO_CORE_ADDR(idx)	(GPIO_CORE_BASE + GPIO_CORE_OFFSET * idx)
+#define GPIO_CORE_0			GPIO_CORE_ADDR(0)
+#define GPIO_CORE_1			GPIO_CORE_ADDR(1)
+
+#define GPIO_CHANNEL_OFFSET 0x0008
+#define GPIO_DATA_0	0x0000
+#define GPIO_TRI_0	0x0004
+#define GPIO_DATA_1	0x0008
+#define GPIO_TRI_1	0x000c
+// #define GPIO_GIER	0x011c // Global interrupt enable register
+// #define GPIO_IER	0x0128 // interrupt enable register
+// #define GPIO_ISR	0x0120 // interrup status register
+/* GPIO END */
+
 //#define KEYBOARD_IRQ    6
 //#define KEYBOARD       0xaf000000
 

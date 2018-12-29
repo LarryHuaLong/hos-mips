@@ -10,6 +10,7 @@
 #include <sysfile.h>
 #include <console.h>
 #include <error.h>
+#include <bluetooth.h>
 
 #define current (pls_read(current))
 
@@ -264,6 +265,37 @@ sys_mkfifo(uint32_t arg[]) {
     return sysfile_mkfifo(name, open_flags);
 }
 
+static uint32_t
+sys_gpio_rw(uint32_t arg[]) {
+    unsigned int rw = arg[0];
+    unsigned int reg_index = arg[1];
+    unsigned int value = arg[2];
+
+    unsigned int core_index = reg_index / 2;
+    reg_index = reg_index - core_index * 2;
+
+    unsigned int addr = GPIO_CORE_BASE + GPIO_CORE_OFFSET * core_index + GPIO_CHANNEL_OFFSET * reg_index;
+
+    if (rw == 0) // read
+    {
+        return *READ_IO(addr);
+    }
+    else // write
+    {
+        return *WRITE_IO(addr) = value;
+    }
+}
+
+static uint32_t
+sys_read_bt(uint32_t arg[]){
+    uint32_t res = 0;
+    if(bt_data[0]){
+        res = bt_data[1];
+        bt_data[0] = 0;
+    }
+    return res;
+}
+
 static uint32_t (*syscalls[])(uint32_t arg[]) = {
     [SYS_exit]              sys_exit,
     [SYS_fork]              sys_fork,
@@ -302,6 +334,8 @@ static uint32_t (*syscalls[])(uint32_t arg[]) = {
     [SYS_dup]               sys_dup,
     [SYS_pipe]              sys_pipe,
     [SYS_mkfifo]            sys_mkfifo,
+    [SYS_gpio_rw]           sys_gpio_rw,
+    [SYS_read_bt]           sys_read_bt,
 };
 
 #define NUM_SYSCALLS        ((sizeof(syscalls)) / (sizeof(syscalls[0])))

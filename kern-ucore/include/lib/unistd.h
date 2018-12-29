@@ -54,6 +54,9 @@
 #define SYS_mount           153
 #define SYS_umount			154
 
+#define SYS_gpio_rw         155
+#define SYS_read_bt         156
+
 /* SYS_fork flags */
 #define CLONE_VM             0x00000100
 #define CLONE_FS             0x00000200

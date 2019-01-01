@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <file.h>
-
+#include <unistd.h>
 //--------------------------------------------
 // Marco definitions
 //--------------------------------------------
@@ -335,6 +335,25 @@ void Delay(void)
 //--------------------------------------------
 int main(int argc, char **argv)
 {
+
+    char base[1025]="";
+    int ret=0;
+    int fd1 = open("urm:",O_RDONLY);
+    ret = read(fd1,base,1);
+    fprintf(1,"urm:%x",ret);
+    int fd = open("bluetooth:",O_RDONLY);
+    while (1){
+        
+        ret = read(fd, base,1024);
+        if (!ret)
+            {
+                fprintf(1,"no data to read\r\n");
+            }
+        fprintf(1,"%s",base);
+        sleep(100);
+    }
+	return 0;
+
     unsigned int lightSensorData = 0x00;
     unsigned int mode = 0x00;
     int btData;

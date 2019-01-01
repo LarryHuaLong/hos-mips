@@ -278,9 +278,6 @@ int bluetooth_int_handler(void *data)
 
 void bluetooth_init()
 {
-    bt_data[0] = 0;
-    bt_data[1] = 0;
-    pos = 0;
     uint32_t a = *READ_IO(BT_UART_BASE + UART_fcr);
     delay();
     *WRITE_IO(BT_UART_BASE + UART_fcr) = a | 0X00000001;

@@ -109,7 +109,7 @@ static inline void outw(uint32_t port, uint32_t data)
 #define GPIO_CORE_OFFSET	0x00001000
 #define GPIO_CORE_ADDR(idx)	(GPIO_CORE_BASE + GPIO_CORE_OFFSET * idx)
 #define GPIO_CORE_0			GPIO_CORE_ADDR(0)
-#define GPIO_CORE_1			GPIO_CORE_ADDR(1)
+//#define GPIO_CORE_1			GPIO_CORE_ADDR(1)
 
 #define GPIO_CHANNEL_OFFSET 0x0008
 #define GPIO_DATA_0	0x0000

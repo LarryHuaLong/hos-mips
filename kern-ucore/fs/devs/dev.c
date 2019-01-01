@@ -171,6 +171,9 @@ void dev_init(void)
 	init_device(disk0);
 	/* for Nand flash */
 	init_device(disk1);
+
+	init_device(bluetooth);
+	init_device(urm);
 }
 
 /*

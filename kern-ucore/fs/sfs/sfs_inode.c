@@ -1516,3 +1516,42 @@ static const struct inode_ops sfs_node_fileops = {
 	.vop_lookup = NULL_VOP_NOTDIR,
 	.vop_lookup_parent = NULL_VOP_NOTDIR,
 };
+/*
+static int sfs_opendev (struct inode * node, uint32_t open_flags);
+static int sfs_closedev (struct inode * node);
+static int sfs_devread (struct inode * node, struct iobuf * iob);
+static int sfs_devwrite (struct inode * node, struct iobuf * iob);
+static int sfs_devfstat (struct inode * node, struct stat * stat);
+static int sfs_devioctl (struct inode * node, int op, void *data);
+static int sfs_devgettype (struct inode * node, uint32_t * type_store);
+static int sfs_devtryseek (struct inode * node, off_t pos);
+static int sfs_devlookup (struct inode * node, char *path,	struct inode ** node_store);
+
+static const struct inode_ops sfs_node_devops = {
+	.vop_magic = VOP_MAGIC,
+	.vop_open = sfs_opendev,
+	.vop_close = sfs_closedev,
+	.vop_read = sfs_devread,
+	.vop_write = sfs_devwrite,
+	.vop_fstat = sfs_devfstat,
+	.vop_fsync = NULL_VOP_PASS,
+	.vop_mkdir = NULL_VOP_NOTDIR,
+	.vop_link = NULL_VOP_NOTDIR,
+	.vop_rename = NULL_VOP_NOTDIR,
+	.vop_readlink = NULL_VOP_NOTDIR,
+	.vop_symlink = NULL_VOP_NOTDIR,
+	.vop_namefile = NULL_VOP_NOTDIR,
+	.vop_getdirentry = NULL_VOP_NOTDIR,
+	.vop_reclaim = NULL_VOP_PASS,
+	.vop_ioctl = sfs_devioctl,
+	.vop_gettype = sfs_devgettype,
+	.vop_tryseek = sfs_devtryseek,
+	.vop_truncate = NULL_VOP_INVAL,
+	.vop_create = NULL_VOP_NOTDIR,
+	.vop_unlink = NULL_VOP_NOTDIR,
+	.vop_lookup = sfs_devlookup,
+	.vop_lookup_parent = NULL_VOP_NOTDIR,
+	.vop_mknod = NULL_VOP_NOTDIR,
+};
+
+*/

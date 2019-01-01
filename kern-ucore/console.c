@@ -9,7 +9,7 @@
 #include <sync.h>
 //#include <vga.h>
 
-#include <bluetooth.h> // new
+//#include <bluetooth.h> // new
 
 /* stupid I/O delay routine necessitated by historical PC design flaws */
 void delay(void)
@@ -164,29 +164,45 @@ static int serial_proc_data(void)
     }
     return c;
 }
-
+extern void dev_stdin_write(char c);
+extern void dev_bluetooth_write(char c);
 void serial_int_handler(void *opaque)
 {//corrected by xiaohan: this is actually not serial interrupt handler!
  //This is in fact External Interrupt Controller's interrupt handler!
  //So, remember to read the EIC to know what interrupt is happening. But for simplicity,
  //here I assume that the EIC only represents serial's interrupt. Other interrupt sources are neglected.
  //Next, rememer to write EIC to tell EIC that it's interrupt has been handled!
- //otherwise the OS will fall into the dead loop of dealing with "previous" EIC interrupt.   
-    int c = cons_getc();
+ //otherwise the OS will fall into the dead loop of dealing with "previous" EIC interrupt.  
+
 	// kprintf("interrupt\n\r");
-	if(c == 0)
+	int cause = get_eic_cause();//get cause from EIC
+	switch (cause)
 	{
-		// kprintf("no keyboard \n\r");
-		bluetooth_int_handler(NULL);
-		xilinx_intc_init();
-		dev_stdin_write(c);
-	}
-	else {
-		extern void dev_stdin_write(char c);
-		//here we should tell EIC that the serial interrupt has been handled.
-		xilinx_intc_init();
-		//the following codes are related to "device drivers".
-		dev_stdin_write(c);
+		case 0: //urm interrupt
+			panic("DangerClose!\n\r");
+			xilinx_intc_init();
+			break;
+		case 4: //bluetooth uart intertrupt
+			xilinx_intc_init();
+			panic("bluetooth interrupt!\r\n");
+			unsigned int RecievedByte;
+			while((*READ_IO(BT_UART_BASE + UART_lsr) & 0x00000001) != 0x00000001){
+				delay();
+			}
+    		RecievedByte = *READ_IO(BT_UART_BASE + UART_rbr);
+			dev_bluetooth_write((char)RecievedByte);
+			break;
+		case 5: //keyboard uart interrupt
+			//here we should tell EIC that the serial interrupt has been handled.
+			xilinx_intc_init();
+			//the following codes are related to "device drivers".
+			int c = cons_getc();
+			dev_stdin_write(c);
+			break;
+		default:
+			panic("Unknown interrupt!");
+			xilinx_intc_init();
+			break;
 	}
 }
 

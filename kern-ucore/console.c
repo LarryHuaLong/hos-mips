@@ -165,7 +165,7 @@ static int serial_proc_data(void)
     return c;
 }
 extern void dev_stdin_write(char c);
-extern void dev_bluetooth_write(char c);
+extern void dev_bluetooth_write();
 void serial_int_handler(void *opaque)
 {//corrected by xiaohan: this is actually not serial interrupt handler!
  //This is in fact External Interrupt Controller's interrupt handler!
@@ -185,12 +185,7 @@ void serial_int_handler(void *opaque)
 		case 4: //bluetooth uart intertrupt
 			//kprintf("bluetooth interrupt!\r\n");
 			
-			while((*READ_IO(BT_UART_BASE + UART_lsr) & 0x00000001) != 0x00000001){
-				delay();
-			}
-			unsigned int RecievedByte;
-    		RecievedByte = *READ_IO(BT_UART_BASE + UART_rbr);
-			dev_bluetooth_write((char)RecievedByte);
+			dev_bluetooth_write();
 			xilinx_intc_init();
 			break;
 		case 5: //keyboard uart interrupt

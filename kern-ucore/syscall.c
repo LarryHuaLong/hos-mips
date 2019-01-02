@@ -282,7 +282,9 @@ sys_gpio_rw(uint32_t arg[]) {
     }
     else // write
     {
-        return *WRITE_IO(addr) = value;
+        *WRITE_IO(addr) = value;
+        // delay();
+        return value;
     }
 }
 

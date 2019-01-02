@@ -12,17 +12,25 @@
 #include <error.h>
 #include <assert.h>
 
+#include <arch.h>
+
 #define BLUETOOTH_BUFSIZE               4096
 
 static char bluetooth_buffer[BLUETOOTH_BUFSIZE];
 static off_t p_rpos, p_wpos;
 
-void dev_bluetooth_write(char c)
+void dev_bluetooth_write()
 {
-    bluetooth_buffer[p_wpos % BLUETOOTH_BUFSIZE] = c;
-    if (p_wpos - p_rpos < BLUETOOTH_BUFSIZE) {
-        p_wpos++;
-    }		
+	
+	while((*READ_IO(BT_UART_BASE + UART_lsr) & 0x00000001) == 0x00000001){
+		unsigned int RecievedByte;
+		RecievedByte = *READ_IO(BT_UART_BASE + UART_rbr);
+		bluetooth_buffer[p_wpos % BLUETOOTH_BUFSIZE] = RecievedByte;
+		if (p_wpos - p_rpos < BLUETOOTH_BUFSIZE) {
+			p_wpos++;
+		}		
+		delay();
+	}
 }
 
 static int dev_bluetooth_read(char *buf, size_t len)

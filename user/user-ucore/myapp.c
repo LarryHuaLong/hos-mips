@@ -342,7 +342,8 @@ int main(int argc, char **argv)
     ret = read(fd1,base,1);
     fprintf(1,"urm:%x",ret);
     int fd = open("bluetooth:",O_RDONLY);
-    while (1){
+    int n =10;
+    while (n--){
         
         ret = read(fd, base,1024);
         if (!ret)
@@ -350,7 +351,8 @@ int main(int argc, char **argv)
                 fprintf(1,"no data to read\r\n");
             }
         fprintf(1,"%s",base);
-        sleep(100);
+        memset(base,'\0',1024);
+        sleep(50);
     }
 	return 0;
 

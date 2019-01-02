@@ -179,18 +179,19 @@ void serial_int_handler(void *opaque)
 	switch (cause)
 	{
 		case 0: //urm interrupt
-			panic("DangerClose!\n\r");
+			kprintf("DangerClose!\n\r");
 			xilinx_intc_init();
 			break;
 		case 4: //bluetooth uart intertrupt
-			xilinx_intc_init();
-			panic("bluetooth interrupt!\r\n");
-			unsigned int RecievedByte;
+			//kprintf("bluetooth interrupt!\r\n");
+			
 			while((*READ_IO(BT_UART_BASE + UART_lsr) & 0x00000001) != 0x00000001){
 				delay();
 			}
+			unsigned int RecievedByte;
     		RecievedByte = *READ_IO(BT_UART_BASE + UART_rbr);
 			dev_bluetooth_write((char)RecievedByte);
+			xilinx_intc_init();
 			break;
 		case 5: //keyboard uart interrupt
 			//here we should tell EIC that the serial interrupt has been handled.

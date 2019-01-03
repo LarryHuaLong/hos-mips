@@ -180,26 +180,32 @@ void serial_int_handler(void *opaque)
 	{
 		case 0: //urm interrupt
 			kprintf("DangerClose!\n\r");
-			xilinx_intc_init();
+			*WRITE_IO(GPIO_CORE_0 + GPIO_DATA_1) = 0xFF55;
+			int n = 5000;
+			while(n--){
+				delay();
+			}
+			*WRITE_IO(GPIO_CORE_0 + GPIO_DATA_1) = 0x0000;
+			//xilinx_intc_init();
 			break;
 		case 4: //bluetooth uart intertrupt
 			//kprintf("bluetooth interrupt!\r\n");
-			
 			dev_bluetooth_write();
-			xilinx_intc_init();
+			//xilinx_intc_init();
 			break;
 		case 5: //keyboard uart interrupt
 			//here we should tell EIC that the serial interrupt has been handled.
-			xilinx_intc_init();
+			//xilinx_intc_init();
 			//the following codes are related to "device drivers".
-			int c = cons_getc();
-			dev_stdin_write(c);
+			{int c = cons_getc();
+			dev_stdin_write(c);}
 			break;
 		default:
 			panic("Unknown interrupt!");
-			xilinx_intc_init();
+			//xilinx_intc_init();
 			break;
 	}
+	eic_acknowledge(cause); //tell EIC that the interrupt has been handled.
 }
 
 //key board handler

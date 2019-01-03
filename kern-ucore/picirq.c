@@ -87,7 +87,7 @@ void xilinx_intc_init()
 	/*
 	 * Enable INT0-INT7 external interrupts
 	 */
-	*WRITE_IO(INTC_BASE + INTC_IER) = 0x000000fe; // changed by hualong,disabled urm interrupt
+	*WRITE_IO(INTC_BASE + INTC_IER) = 0x000000ff; // changed by hualong,disabled urm interrupt
 	
 	//uart_print("The AXI4 interrupt controller is initialized!\n\r");
 	
@@ -104,4 +104,10 @@ int get_eic_cause(){
 		i++;
 	}
 	return -1;
+}
+int get_eic_pending(){ 
+	return *READ_IO(INTC_BASE + INTC_IPR);
+}
+void eic_acknowledge(int n){
+	*WRITE_IO(INTC_BASE + INTC_IAR) = 1<<n;
 }

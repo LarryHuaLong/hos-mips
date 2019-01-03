@@ -46,7 +46,7 @@ void Move1(unsigned int lightSensorData);
 void Delay(void);
 
 int atoi(char*);
-int bluetooth_int_handler(uint32_t, int);
+int bluetooth_data_handler(uint32_t, int);
 //--------------------------------------------
 // Function definitions
 //--------------------------------------------
@@ -547,7 +547,7 @@ int atoi(char *str)
         return bMinus?-result:result;
 }
 
-int bluetooth_int_handler(uint32_t mode, int fd)
+int bluetooth_data_handler(uint32_t mode, int fd)
 {
     // fprintf(1, "mode 1\n\r");
     if(mode == 1){   // redlight
@@ -556,7 +556,10 @@ int bluetooth_int_handler(uint32_t mode, int fd)
     }
     else if(mode == 2){  // ultrasonic
         // fprintf(1, "mode 2\n\r");  
-        Mode0(sys_read_bt());
+        uint32_t d = sys_gpio_rw(0,0,0);
+        d >>= 16;
+        d = d > 300 ? 0xff : 0xff0000;
+        Mode0(d);
         return 2;
     }
     char base[1025]="";
@@ -568,7 +571,7 @@ int bluetooth_int_handler(uint32_t mode, int fd)
         //fprintf(1,"no data to read\r\n");
         return -1;
     }
-    fprintf(1, "%s\n\r", base);
+    // fprintf(1, "%s\n\r", base);
     int pos = -1;
     int i;
     for(i = 1023; i >= 0; i--){
@@ -582,7 +585,7 @@ int bluetooth_int_handler(uint32_t mode, int fd)
     }
     if(pos == -1)return -1;
     // fprintf(1, "pos: %d\n\r", pos);
-    pos++;
+    pos = pos == 0 ? pos : pos + 1;
     char bt_command[30];
     for(i = 0; i < 30; i++){
         if(base[pos] == ';'){
@@ -591,7 +594,7 @@ int bluetooth_int_handler(uint32_t mode, int fd)
         }
         bt_command[i] = base[pos++];
     }
-    // fprintf(1, "command: %s\n\r", bt_command);
+    fprintf(1, "command: %s\n\r", bt_command);
     // new
     if(bt_command[1] == 'M')  // gravity
     {
@@ -657,39 +660,17 @@ int bluetooth_int_handler(uint32_t mode, int fd)
 //--------------------------------------------
 int main(int argc, char **argv)
 {
+
     uint32_t bt_mode = 0;  // 0:bluetooth, 1:redlight, 2:ultrasonic
     int fd = open("bluetooth:",O_RDONLY);
     while(1){
 
-        int x = bluetooth_int_handler(0,fd);
-        if(x == -1)bluetooth_int_handler(bt_mode,fd); 
+        int x = bluetooth_data_handler(0,fd);
+        if(x == -1)bluetooth_data_handler(bt_mode,fd); 
         else {
             bt_mode = x;
         }
         sleep(8);
     }
     return 0;
-/* 
-    unsigned int lightSensorData = 0x00;
-    unsigned int mode = 0x00;
-    int btData;
-
-    while (1)
-    {
-        mode = 1;
-        btData = sys_read_bt();
-
-        if (mode == 0)
-        {
-            Mode0(btData);
-        }
-        else if (mode == 1)
-        {
-            Mode1(btData);
-        }
-
-        Delay();
-    }
-
-	return 0; */
 }

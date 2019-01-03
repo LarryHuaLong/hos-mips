@@ -29,7 +29,7 @@ void dev_bluetooth_write()
 		if (p_wpos - p_rpos < BLUETOOTH_BUFSIZE) {
 			p_wpos++;
 		}		
-		delay();
+		//delay();
 	}
 }
 

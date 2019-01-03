@@ -61,7 +61,6 @@ int sys_mount(const char *source, const char *target,
 	      const char *filesystemtype, const void *data);
 int sys_umount(const char *target);
 int sys_gpio_rw(unsigned int rw, unsigned int reg_index, unsigned int value);
-int sys_read_bt(void);
 
 int sys_ioctl(int d, int request, unsigned long data);
 

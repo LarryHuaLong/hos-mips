@@ -288,16 +288,6 @@ sys_gpio_rw(uint32_t arg[]) {
     }
 }
 
-static uint32_t
-sys_read_bt(uint32_t arg[]){
-    uint32_t res = 0;
-    if(bt_data[0]){
-        res = bt_data[1];
-        bt_data[0] = 0;
-    }
-    return res;
-}
-
 static uint32_t (*syscalls[])(uint32_t arg[]) = {
     [SYS_exit]              sys_exit,
     [SYS_fork]              sys_fork,
@@ -337,7 +327,6 @@ static uint32_t (*syscalls[])(uint32_t arg[]) = {
     [SYS_pipe]              sys_pipe,
     [SYS_mkfifo]            sys_mkfifo,
     [SYS_gpio_rw]           sys_gpio_rw,
-    [SYS_read_bt]           sys_read_bt,
 };
 
 #define NUM_SYSCALLS        ((sizeof(syscalls)) / (sizeof(syscalls[0])))
